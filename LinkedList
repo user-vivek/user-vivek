@@ -1,0 +1,194 @@
+Linked list :
+
+Problem No 126 : 
+Write a Program to reverse the Linked List. (Both Iterative and recursive)
+
+Logic : reversing linked list means currently LL is a → b → c → d
+We just need to reverse the direction a ← b ← c ← d which is equivalent of 
+d→ c → b → a reversed LL.
+ 
+For this we just need to make the next of the current element to point to its previous element.
+ 
+Solution:
+Iterative approach :
+
+Iterate through the list and change the next of the current element to point to its previous element.
+
+For this we need two pointers 
+Node prev→ null and Node current → head.
+So that during iteration we can make current.next = prev and after then current = updated to next element (as per input LL e.g. updated to b).
+
+Once this iteration is complete we will get a ← b ← c ← d
+current =null and prev = d
+but we also need to update the head of the LL from earlier a to now d.
+By making head = prev 
+
+Code :
+
+
+Node reverse(Node head){
+	Node prev= null;
+	Node current = head;
+
+	/*making current node to point to its previous node, thus reversing LL
+   And updating next element as current node, and making current node	   as new previous node*/
+
+	while(current!= null){
+		Node temp = current.next;
+		current.next= prev;
+		prev= current;
+		current = temp;
+}
+
+head = prev;
+return head;
+
+}
+
+Recursive approach- V.Important  :
+
+Logic :
+Say given LL 1(head)-> 2-> 3 -> 4-> 5
+When reverse recursion function applied on remaining elements
+
+1 (head)   (2 <- 3 <- 4 <- 5(newHead))
+Now we need to point 2 with 1 
+So head.next.next = head, here head.next means 2 , and then head.next.next means 2.next points to 1 
+
+1 <- 2 <- 3 <- 4 <- 5
+And after this we need to reset next of head also that is 
+Head.next = null
+
+Static Node reverse(Node head){
+	
+	//base case - when head = null return head
+	if(head == null){
+		return head;
+}
+
+//function to find new reversed head for remaining elements of LL 
+Node newHead = reverse(head.next);
+
+//kaam- whatever 
+head.next.next = head;
+head.next = null;
+
+newHead= head;
+return newHead;
+}
+
+Problem No : 127
+Reverse a Linked List in groups of given size (V.Important)
+
+Given input 
+Input List: 1 —> 2 —> 3 —> 4 —> 5 —> 6 —> 7 —> 8 —> null
+For k = 3,
+Output: 3 —> 2 —> 1 —> 6 —> 5 —> 4 —> 8 —> 7 —> null
+
+Logic :
+From the previous problem we know how to reverse given LL recursively. 
+1 —> 2 —> 3 —> 4 —> 5 —> 6 —> 7 —> 8 —> null
+In this case for k =3 
+We will write logic how to reverse LL with K elements 
+3 —> 2 —>1   4 —> 5 —> 6 —> 7 —> 8 —> null
+And we will apply our reverse(Node 4, k) on remaining elements
+
+Code :
+static Node reverse(Node head, int k){
+	//base condition
+	if(head == null){
+	return null;
+}
+
+Node current = head;
+Node prev = null;
+int counter = 0;
+
+while(current!= null && counter!=k){
+	Node temp = current.next;
+	current.next = prev;
+	prev = current;
+	current= temp;
+}
+
+Node headFirstKGroup= prev;
+Node headRemainingGroup = reverse(current,k);
+//here head is 1 , so head.next 1 linked to -> 6
+head.next = headRemainingGroup;
+
+//here prev = head of reversed LL of first k elements
+return headFirstKGroup;
+}
+
+
+Problem No : 128
+Detect Loop in linked list
+
+Approach : Tortoise hare problem/ Floyd’s algorithm
+
+Code :
+public static boolean detectLoop(Node head){
+	Node slow_ptr = head;
+	Node fast_ptr = head;
+
+/* case 1: suppose loop not present in LL then fast_ptr will become null first or fast_ptr.next become null first before than slow_ptr
+Case 2: suppose loop is present then this function will return true from within this while loop, so both way this while loop will break*/
+
+	while(fast_ptr != null && fast_ptr.next != null){
+		Slow_ptr = slow_ptr.next;
+		Fast_ptr = fast_ptr.next.next;
+		
+		if(slow_ptr == fast_ptr){
+return true;
+}
+}
+
+return false;
+} 
+
+
+Problem No : 129
+Remove loop from a Linked List
+
+Input:
+N = 3
+value[] = {1,3,4}
+X = 2
+Output: 1
+Explanation: The link list looks like
+1 -> 3 -> 4
+     ^    |
+     |____|    
+A loop is present. If you remove it 
+successfully, the answer will be 1. 
+Approach : here Floyd algorithm can not be used as we also need prev node to make it point to null.
+Best approach in this case would be to use Hashing.
+
+Code :
+public static void removeLoop(Node head){
+	Node current = head;
+	Node prev = null;
+	
+	Set<Node> set = new HashSet<>();
+
+	//if loop not present code breaks here
+	while(current!= null){
+
+		//if loop present - code breaks here
+		if(set.contains(current)){
+		Prev.next = null;
+		return;
+}
+
+set.add(current);
+prev = current;
+current = current.next;
+}
+}
+
+Time complexity : O(n)
+
+Problem No : 130 
+Find the starting point of the loop
+
+
