@@ -188,7 +188,5 @@ current = current.next;
 
 Time complexity : O(n)
 
-Problem No : 130 
-Find the starting point of the loop
 
 
